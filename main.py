@@ -25,20 +25,21 @@ return {
 
 def get_candles(symbol):
 r = requests.get(
-f”https://api.binance.com/api/v3/klines?symbol={symbol}&interval=15m&limit=20”,
+f"https://api.binance.com/api/v3/klines?symbol={symbol}&interval=15m&limit=20",
 timeout=10
 )
 return [
-{“o”: float(c[1]), “h”: float(c[2]), “l”: float(c[3]), “c”: float(c[4])}
+{"o": float(c[1]), "h": float(c[2]), "l": float(c[3]), "c": float(c[4])}
 for c in r.json()
 ]
 
 def analyze(symbol, ticker, candles):
-candle_text = “ | “.join(
-f”O:{c[‘o’]:.0f} H:{c[‘h’]:.0f} L:{c[‘l’]:.0f} C:{c[‘c’]:.0f}”
+candle_text = " | ".join(
+f"O:{c[‘o’]:.0f} H:{c[‘h’]:.0f} L:{c[‘l’]:.0f} C:
+{c[‘c’]:.0f}"
 for c in candles[-10:]
 )
-prompt = f””“Kripto texnik tahlil qiling.
+prompt = f"""Kripto texnik tahlil qiling.
 Aktiv: {symbol} | Narx: ${ticker[‘price’]:,.2f} | 24s: {ticker[‘change_pct’]:+.2f}%
 Yuqori: ${ticker[‘high’]:,.2f} | Past: ${ticker[‘low’]:,.2f}
 Oxirgi 10 sham: {candle_text}
@@ -69,8 +70,8 @@ return r.json()["choices"][0]["message"]["content"]
 
 def send_telegram(msg):
 requests.post(
-f”https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage”,
-json={“chat_id”: CHAT_ID, “text”: msg, “parse_mode”: “HTML”},
+f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage",
+json={"chat_id": CHAT_ID, "text": msg, "parse_mode": "HTML"},
 timeout=10
 )
 
@@ -83,17 +84,17 @@ result  = analyze(symbol, ticker, candles)
 now     = datetime.now().strftime(”%d.%m.%Y %H:%M”)
 display = symbol.replace(“USDT”, “/USDT”)
 msg = (
-f”<b>📈 {display} — {now}</b>\n”
-f”💰 <b>${ticker[‘price’]:,.2f}</b> ({ticker[‘change_pct’]:+.2f}%)\n\n”
-f”{result}”
+f"<b>📈 {display} — {now}</b>\n"
+f"💰 <b>${ticker[‘price’]:,.2f}</b> ({ticker[‘change_pct’]:+.2f}%)\n\n"
+f"{result}"
 )
 send_telegram(msg)
-print(f”{symbol} ✅”)
+print(f"{symbol} ✅")
 time.sleep(2)
 except Exception as e:
-print(f”{symbol} xato: {e}”)
+print(f"{symbol} xato: {e}")
 
-print(“🚀 Bot ishga tushdi!”)
+print("🚀 Bot ishga tushdi!")
 run()
 schedule.every(15).minutes.do(run)
 while True:
