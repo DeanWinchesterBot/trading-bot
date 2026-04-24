@@ -1,0 +1,39 @@
+import os,requests,time
+t=os.environ.get("TELEGRAM_TOKEN")
+c=os.environ.get("CHAT_ID")
+def rsi(p,n=14):
+ g,l=[],[]
+ for i in range(1,len(p)):
+  d=p[i]-p[i-1];g.append(max(d,0));l.append(max(-d,0))
+ ag=sum(g[-n:])/n;al=sum(l[-n:])/n
+ return round(100 if al==0 else 100-100/(1+ag/al),1)
+def ema(p,n):
+ k=2/(n+1);e=p[0]
+ for x in p[1:]:e=x*k+e*(1-k)
+ return e
+def sig(sym,name):
+ d=requests.get("https://api.coingecko.com/api/v3/coins/"+sym+"/market_chart",params={"vs_currency":"usd","days":"2","interval":"hourly"},timeout=15).json()
+ p=[x[1] for x in d["prices"]];pr=round(p[-1],2);r=rsi(p);m=round(ema(p,12)-ema(p,26),2);ch=round((p[-1]-p[-24])/p[-24]*100,2);hi=max(p[-24:]);lo=min(p[-24:]);f1=round(lo+(hi-lo)*0.382,2);f2=round(lo+(hi-lo)*0.618,2)
+ sc=0
+ if r<35:sc+=2
+ elif r<45:sc+=1
+ elif r>65:sc-=2
+ elif r>55:sc-=1
+ if m>0:sc+=1
+ else:sc-=1
+ if ch>1:sc+=1
+ elif ch<-1:sc-=1
+ if pr<f1:sc+=1
+ elif pr>f2:sc-=1
+ s="KUCHLI BUY 🟢🟢" if sc>=3 else "BUY 🟢" if sc>=1 else "KUCHLI SELL 🔴🔴" if sc<=-3 else "SELL 🔴" if sc<=-1 else "HOLD 🟡"
+ return name+" $"+str(pr)+" ("+str(ch)+"%)\nRSI:"+str(r)+" MACD:"+str(m)+"\nFib:$"+str(f1)+"|$"+str(f2)+"\nSignal:"+s+" (ball:"+str(sc)+")"
+def gold():
+ d=requests.get("https://api.coingecko.com/api/v3/simple/price",params={"ids":"tether-gold","vs_currencies":"usd","include_24hr_change":"true"},timeout=10).json();p=round(d["tether-gold"]["usd"],2);ch=round(d["tether-gold"]["usd_24h_change"],2)
+ s="BUY 🟢" if ch>0.5 else "SELL 🔴" if ch<-0.5 else "HOLD 🟡"
+ return "XAUUSD $"+str(p)+" ("+str(ch)+"%)\nSignal:"+s
+while True:
+ try:
+  msg=sig("bitcoin","BTC")+"\n\n"+sig("ethereum","ETH")+"\n\n"+gold();requests.post("https://api.telegram.org/bot"+t+"/sendMessage",json={"chat_id":c,"text":msg})
+ except Exception as e:
+  print(str(e))
+ time.sleep(900)
