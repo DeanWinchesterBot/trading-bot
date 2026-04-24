@@ -4,9 +4,9 @@ import time
 import os
 from datetime import datetime
 
-TELEGRAM_TOKEN = os.environ.get(“TELEGRAM_TOKEN”)
-CHAT_ID = os.environ.get(“CHAT_ID”)
-GROQ_API_KEY = os.environ.get(“GROQ_API_KEY”)
+TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
+CHAT_ID = os.environ.get("CHAT_ID")
+GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
 
 SYMBOLS = [“BTCUSDT”, “ETHUSDT”]
 
