@@ -8,19 +8,19 @@ TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
 CHAT_ID = os.environ.get("CHAT_ID")
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
 
-SYMBOLS = [“BTCUSDT”, “ETHUSDT”]
+SYMBOLS = ["BTCUSDT", "ETHUSDT"]
 
 def get_ticker(symbol):
 r = requests.get(
-f”https://api.binance.com/api/v3/ticker/24hr?symbol={symbol}”,
+f"https://api.binance.com/api/v3/ticker/24hr?symbol={symbol}",
 timeout=10
 )
 d = r.json()
 return {
-“price”:      float(d[“lastPrice”]),
-“change_pct”: float(d[“priceChangePercent”]),
-“high”:       float(d[“highPrice”]),
-“low”:        float(d[“lowPrice”]),
+"price":      float(d["lastPrice"]),
+"change_pct": float(d["priceChangePercent"]),
+"high":       float(d["highPrice"]),
+"low":        float(d["lowPrice"]),
 }
 
 def get_candles(symbol):
