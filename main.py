@@ -28,9 +28,21 @@ def sig(sym,name):
  s="KUCHLI BUY 🟢🟢" if sc>=3 else "BUY 🟢" if sc>=1 else "KUCHLI SELL 🔴🔴" if sc<=-3 else "SELL 🔴" if sc<=-1 else "HOLD 🟡"
  return name+" $"+str(pr)+" ("+str(ch)+"%)\nRSI:"+str(r)+" MACD:"+str(m)+"\nFib:$"+str(f1)+"|$"+str(f2)+"\nSignal:"+s+" (ball:"+str(sc)+")"
 def gold():
- d=requests.get("https://api.coingecko.com/api/v3/simple/price",params={"ids":"tether-gold","vs_currencies":"usd","include_24hr_change":"true"},timeout=10).json();p=round(d["tether-gold"]["usd"],2);ch=round(d["tether-gold"]["usd_24h_change"],2)
- s="BUY 🟢" if ch>0.5 else "SELL 🔴" if ch<-0.5 else "HOLD 🟡"
- return "XAUUSD $"+str(p)+" ("+str(ch)+"%)\nSignal:"+s
+ d=requests.get("https://api.coingecko.com/api/v3/coins/tether-gold/market_chart",params={"vs_currency":"usd","days":"2","interval":"hourly"},timeout=15).json();p2=[x[1] for x in d["prices"]];pr=round(p2[-1],2);r=rsi(p2);m=round(ema(p2,12)-ema(p2,26),2);ch=round((p2[-1]-p2[-24])/p2[-24]*100,2);hi=max(p2[-24:]);lo=min(p2[-24:]);f1=round(lo+(hi-lo)*0.382,2);f2=round(lo+(hi-lo)*0.618,2)
+ sc=0
+ if r<35:sc+=2
+ elif r<45:sc+=1
+ elif r>65:sc-=2
+ elif r>55:sc-=1
+ if m>0:sc+=1
+ else:sc-=1
+ if ch>0.5:sc+=1
+ elif ch<-0.5:sc-=1
+ if pr<f1:sc+=1
+ elif pr>f2:sc-=1
+ s="KUCHLI BUY 🟢🟢" if sc>=3 else "BUY 🟢" if sc>=1 else "KUCHLI SELL 🔴🔴" if sc<=-3 else "SELL 🔴" if sc<=-1 else "HOLD 🟡"
+ return "XAUUSD $"+str(pr)+" ("+str(ch)+"%)\nRSI:"+str(r)+" MACD:"+str(m)+"\nFib:$"+str(f1)+"|$"+str(f2)+"\nSignal:"+s+" (ball:"+str(sc)+")"
+
 while True:
  try:
   msg=sig("bitcoin","BTC")+"\n\n"+sig("ethereum","ETH")+"\n\n"+gold();requests.post("https://api.telegram.org/bot"+t+"/sendMessage",json={"chat_id":c,"text":msg})
