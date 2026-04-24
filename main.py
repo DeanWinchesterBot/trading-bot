@@ -43,9 +43,15 @@ def crypto(sym,name):
  elif score<=-1:sig="SELL 🔴"
  else:sig="HOLD 🟡"
  return name+" $"+str(p)+" ("+str(ch)+"%)\nRSI: "+str(r)+" | MACD: "+str(m)+"\nFib: $"+str(f1)+" | $"+str(f2)+"\nSignal: "+sig+" (ball: "+str(score)+")"
-def gold():
- d=requests.get("https://api.metals.live/v1/spot/gold",timeout=10).json()
- p=round(float(d[0]["price"]),2)
+ def gold():
+ d=requests.get("https://api.coingecko.com/api/v3/simple/price",params={"ids":"tether-gold","vs_currencies":"usd","include_24hr_change":"true"},timeout=10).json()
+ p=round(d["tether-gold"]["usd"],2)
+ ch=round(d["tether-gold"]["usd_24h_change"],2)
+ if ch>0.5:sig="BUY 🟢"
+ elif ch<-0.5:sig="SELL 🔴"
+ else:sig="HOLD 🟡"
+ return "XAUUSD $"+str(p)+" ("+str(ch)+"%)\nSignal: "+sig
+
  d2=requests.get("https://api.coingecko.com/api/v3/simple/price",params={"ids":"tether-gold","vs_currencies":"usd","include_24hr_change":"true"},timeout=10).json()
  ch=round(d2["tether-gold"]["usd_24h_change"],2)
  if ch>0.5:sig="BUY 🟢"
