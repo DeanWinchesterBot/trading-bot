@@ -1,6 +1,8 @@
-import os,requests,time
+import os,requests,time,threading
 t=os.environ.get("TELEGRAM_TOKEN")
 c=os.environ.get("CHAT_ID")
+running=True
+offset=0
 def rsi(p,n=14):
  g,l=[],[]
  for i in range(1,len(p)):
@@ -42,10 +44,40 @@ def gold():
  elif pr>f2:sc-=1
  s="KUCHLI BUY 🟢🟢" if sc>=3 else "BUY 🟢" if sc>=1 else "KUCHLI SELL 🔴🔴" if sc<=-3 else "SELL 🔴" if sc<=-1 else "HOLD 🟡"
  return "XAUUSD $"+str(pr)+" ("+str(ch)+"%)\nRSI:"+str(r)+" MACD:"+str(m)+"\nFib:$"+str(f1)+"|$"+str(f2)+"\nSignal:"+s+" (ball:"+str(sc)+")"
-
-while True:
+def send(msg):
+ requests.post("https://api.telegram.org/bot"+t+"/sendMessage",json={"chat_id":c,"text":msg},timeout=10)
+def analyze():
  try:
-  msg=sig("bitcoin","BTC")+"\n\n"+sig("ethereum","ETH")+"\n\n"+gold();requests.post("https://api.telegram.org/bot"+t+"/sendMessage",json={"chat_id":c,"text":msg})
+  msg=sig("bitcoin","BTC")+"\n\n"+sig("ethereum","ETH")+"\n\n"+gold()
+  send(msg)
  except Exception as e:
   print(str(e))
- time.sleep(900)
+def check_commands():
+ global running,offset
+ while True:
+  try:
+   r=requests.get("https://api.telegram.org/bot"+t+"/getUpdates",params={"offset":offset,"timeout":10},timeout=15).json()
+   for u in r.get("result",[]):
+    offset=u["update_id"]+1
+    txt=u.get("message",{}).get("text","")
+    if txt=="/start":
+     running=True
+     send("✅ Bot ishga tushdi! Har 15 daqiqada signal keladi.")
+     analyze()
+    elif txt=="/stop":
+     running=False
+     send("⛔ Bot to'xtatildi. Qayta boshlash uchun /start yuboring.")
+    elif txt=="/signal":
+     send("⏳ Tahlil qilinmoqda...")
+     analyze()
+  except Exception as e:
+   print(str(e))
+  time.sleep(3)
+def signal_loop():
+ while True:
+  if running:
+   analyze()
+  time.sleep(900)
+threading.Thread(target=check_commands,daemon=True).start()
+send("🤖 Bot ishga tushdi!\n/start - boshlash\n/stop - to'xtatish\n/signal - hozir signal")
+signal_loop()
