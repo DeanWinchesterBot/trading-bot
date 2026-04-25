@@ -70,6 +70,18 @@ def check_commands():
     elif txt=="/signal":
      send("⏳ Tahlil qilinmoqda...")
      analyze()
+    elif txt=="/news":
+     send("⏳ Yangiliklar qidirilmoqda...")
+     try:
+      import datetime
+      today=datetime.datetime.now().strftime("%Y-%m-%d")
+      news_prompt="Bugun "+today+" oltinga (XAUUSD) ta'sir qiladigan eng muhim 5 ta yangilikni qisqa va aniq yoz. Har birini emoji bilan boshla. Format: [emoji] [yangilik] -> [oltin uchun ta'siri: BULLISH/BEARISH/NEYTRAL]"
+      r=requests.post("https://api.groq.com/openai/v1/chat/completions",headers={"Authorization":"Bearer "+g,"Content-Type":"application/json"},json={"model":"llama3-70b-8192","messages":[{"role":"user","content":news_prompt}],"max_tokens":500},timeout=30)
+      news_text=r.json()["choices"][0]["message"]["content"]
+      send("📰 XAUUSD YANGILIKLAR\n\n"+news_text+"\n\n⚠️ Bu AI tahlili, real yangilik emas!")
+     except Exception as e:
+      send("❌ Xato: "+str(e))
+
   except Exception as e:
    print(str(e))
   time.sleep(3)
