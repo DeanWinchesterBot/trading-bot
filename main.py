@@ -6,7 +6,7 @@ from flask_cors import CORS
 
 t=os.environ.get("TELEGRAM_TOKEN","")
 c=os.environ.get("CHAT_ID","")
-g=os.environ.get("GROQ_API_KEY",")
+g=os.environ.get("GROQ_API_KEY","")
 
 app=Flask(**name**)
 CORS(app)
