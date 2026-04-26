@@ -261,7 +261,7 @@ try:
 today=datetime.datetime.now().strftime("%Y-%m-%d")
 prompt=("Bugun "+today+" XAUUSD oltinga tasir qiladigan eng muhim 5 ta yangilikni yoz. Har biri: [emoji] [yangilik] -> [BULLISH/BEARISH/NEYTRAL]. Faqat shu formatda.")
 r=requests.post("https://api.groq.com/openai/v1/chat/completions",
-headers={"Authorization":“Bearer "+g,"Content-Type":"application/json"},
+headers={"Authorization":"Bearer "+g,"Content-Type":"application/json"},
 json={"model":"llama3-70b-8192","messages":[{"role":"user","content":prompt}],"max_tokens":600},timeout=30)
 return r.json()["choices"][0]["message"]["content"]
 except Exception as e:
