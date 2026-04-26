@@ -52,8 +52,26 @@ def analyze():
   send(msg)
  except Exception as e:
   print(str(e))
+from commands import handle_command,send
 def check_commands():
- global running,offset,g
+ global running,offset
+ while True:
+  try:
+   r=requests.get("https://api.telegram.org/bot"+t+"/getUpdates",params={"offset":offset,"timeout":10},timeout=15).json()
+   for u in r.get("result",[]):
+    offset=u["update_id"]+1
+    txt=u.get("message",{}).get("text","")
+    result=handle_command(txt,t,c,g,analyze)
+    if result=="start":
+     running=True
+     send(t,c,"✅ Bot ishga tushdi!")
+     analyze()
+    elif result=="stop":
+     running=False
+     send(t,c,"⛔ Bot toxtatildi. /start bilan qayta boshlang.")
+  except Exception as e:
+   print(str(e))
+  time.sleep(3)
  while True:
   try:
    r=requests.get("https://api.telegram.org/bot"+t+"/getUpdates",params={"offset":offset,"timeout":10},timeout=15).json()
