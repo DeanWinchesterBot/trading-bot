@@ -91,11 +91,22 @@ def check_commands():
   except Exception as e:
    print(str(e))
   time.sleep(3)
+  last_data={"btc":{},"eth":{},"gold":{}}
+@app.route("/api/signals")
+def api_signals():
+ return jsonify(last_data)
+@app.route("/api/news")
+def api_news():
+ return jsonify({"news":news()})
+@app.route("/")
+def index():
+ return open("index.html").read()
 def signal_loop():
  while True:
   if running:
    analyze()
   time.sleep(900)
 threading.Thread(target=check_commands,daemon=True).start()
-send("🤖 Bot ishga tushdi!\n/start - boshlash\n/stop - toxtatish\n/signal - signal\n/news - yangiliklar\n/help - yordam")
-signal_loop()
+threading.Thread(target=signal_loop,daemon=True).start()
+send("🤖 Bot ishga tushdi!")
+app.run(host="0.0.0.0",port=int(os.environ.get("PORT",8080)))
