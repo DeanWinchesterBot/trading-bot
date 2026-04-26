@@ -258,7 +258,7 @@ print("Tahlil xato:"+str(e))
 
 def get_news():
 try:
-today=datetime.datetime.now().strftime(”%Y-%m-%d”)
+today=datetime.datetime.now().strftime("%Y-%m-%d")
 prompt=("Bugun "+today+" XAUUSD oltinga tasir qiladigan eng muhim 5 ta yangilikni yoz. Har biri: [emoji] [yangilik] -> [BULLISH/BEARISH/NEYTRAL]. Faqat shu formatda.")
 r=requests.post("https://api.groq.com/openai/v1/chat/completions",
 headers={"Authorization":“Bearer "+g,"Content-Type":"application/json"},
