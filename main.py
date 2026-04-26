@@ -207,8 +207,8 @@ elif pr>bb_hi:sc-=2
 elif pr<bb_mid:sc+=1
 else:sc-=1
 if gz_lo<=pr<=gz_hi:sc+=2
-elif pr<fib_r[“61.8”]:sc+=1
-elif pr>fib_r[“23.6”]:sc-=1
+elif pr<fib_r["61.8"]:sc+=1
+elif pr>fib_r["23.6"]:sc-=1
 if sk<20:sc+=2
 elif sk<30:sc+=1
 elif sk>80:sc-=2
