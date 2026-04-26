@@ -8,7 +8,7 @@ t=os.environ.get("TELEGRAM_TOKEN","")
 c=os.environ.get("CHAT_ID","")
 g=os.environ.get("GROQ_API_KEY","")
 
-app=Flask(**name**)
+app=Flask(__name__)
 CORS(app)
 running=True
 offset=0
@@ -18,7 +18,7 @@ last_data={"btc":{},"eth":{},"gold":{}}
 
 def ema(p,n):
 k=2/(n+1);e=p[0]
-for x in p[1:]:e=x*k+e*(1-k)
+for x in p[1:]:e=x_k+e_(1-k)
 return round(e,4)
 
 def rsi(p,n=14):
@@ -33,8 +33,8 @@ return round(ema(p,12)-ema(p,26),4)
 
 def bollinger(p,n=20):
 s=p[-n:];m=sum(s)/n
-std=(sum((x-m)**2 for x in s)/n)**0.5
-return round(m-2*std,2),round(m,2),round(m+2*std,2)
+std=(sum((x-m)__2 for x in s)/n)__0.5
+return round(m-2_std,2),round(m,2),round(m+2_std,2)
 
 def stoch_val(highs,lows,closes,n=14):
 h=max(highs[-n:]);l=min(lows[-n:])
@@ -54,21 +54,21 @@ def fib_retracement(hi,lo):
 r=hi-lo
 return {
 "0":round(hi,2),
-"23.6":round(hi-r*0.236,2),
-"38.2":round(hi-r*0.382,2),
-"50":round(hi-r*0.5,2),
-"61.8":round(hi-r*0.618,2),
-"78.6":round(hi-r*0.786,2),
+"23.6":round(hi-r-0.236,2),
+"38.2":round(hi-r-0.382,2),
+"50":round(hi-r-0.5,2),
+"61.8":round(hi-r-0.618,2),
+"78.6":round(hi-r-0.786,2),
 "100":round(lo,2)
 }
 
 def fib_extension(hi,lo,retr):
 r=hi-lo
 return {
-"127.2":round(retr+r*1.272,2),
-"161.8":round(retr+r*1.618,2),
-"261.8":round(retr+r*2.618,2),
-"423.6":round(retr+r*4.236,2)
+"127.2":round(retr+r+1.272,2),
+"161.8":round(retr+r+1.618,2),
+"261.8":round(retr+r+2.618,2),
+"423.6":round(retr+r+4.236,2)
 }
 
 def fib_projection(a,b,c):
