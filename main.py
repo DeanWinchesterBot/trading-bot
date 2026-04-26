@@ -53,7 +53,7 @@ def analyze():
  except Exception as e:
   print(str(e))
 def check_commands():
- global running,offset
+ global running,offset,g
  while True:
   try:
    r=requests.get("https://api.telegram.org/bot"+t+"/getUpdates",params={"offset":offset,"timeout":10},timeout=15).json()
