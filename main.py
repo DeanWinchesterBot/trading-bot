@@ -114,8 +114,8 @@ result="Impulse 4-tolqin tugashi (SELL imkoniyati)"
 else:
 result="Tolqin kuzatilmoqda"
 if len(pivots)>=6:
-hh=[x[2] for x in pivots if x[0]==“H”][-3:]
-ll=[x[2] for x in pivots if x[0]==“L”][-3:]
+hh=[x[2] for x in pivots if x[0]=="H"][-3:]
+ll=[x[2] for x in pivots if x[0]=="L"][-3:]
 if len(hh)>=2 and len(ll)>=2:
 if hh[-1]<hh[-2] and ll[-1]>ll[-2]:
 result+=" | Triangle ABCDE (Breakout kutilmoqda)"
