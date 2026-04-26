@@ -306,7 +306,7 @@ run_analysis()
 elif txt=="/stop":
 running=False
 send("Bot toxtatildi. /start bilan qayta boshlang.")
-elif txt==”/signal”:
+elif txt=="/signal":
 send("Tahlil qilinmoqda…")
 run_analysis()
 elif txt=="/news":
