@@ -34,7 +34,7 @@ return round(ema(p,12)-ema(p,26),4)
 def bollinger(p,n=20):
 s=p[-n:];m=sum(s)/n
 std=(sum((x-m)__2 for x in s)/n)__0.5
-return round(m-2_std,2),round(m,2),round(m+2_std,2)
+return round(m-2-std,2),round(m,2),round(m+2+std,2)
 
 def stoch_val(highs,lows,closes,n=14):
 h=max(highs[-n:]);l=min(lows[-n:])
