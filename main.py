@@ -1,4 +1,8 @@
 import os,requests,time,threading,datetime
+from flask import Flask,jsonify
+from flask_cors import CORS
+app=Flask(__name__)
+CORS(app)
 t=os.environ.get("TELEGRAM_TOKEN")
 c=os.environ.get("CHAT_ID")
 g=os.environ.get("GROQ_API_KEY")
