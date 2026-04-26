@@ -95,7 +95,7 @@ pivots.append(("H",i,p[i]))
 elif p[i]<p[i-1] and p[i]<p[i-2] and p[i]<p[i+1] and p[i]<p[i+2]:
 pivots.append(("L",i,p[i]))
 if len(pivots)<4:
-trend=“Yuqoriga” if p[-1]>p[0] else "Pastga"
+trend="Yuqoriga" if p[-1]>p[0] else "Pastga"
 return "Trend: "+trend+", Tolqin shakllanmoqda"
 last=pivots[-4:]
 types=[x[0] for x in last]
